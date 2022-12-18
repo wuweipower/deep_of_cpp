@@ -58,7 +58,7 @@ int a()
 
 
 
-## **如果只是dbg，编译器不会优化**
+**如果只是dbg，编译器不会优化**
 
 ## link
 
@@ -723,11 +723,248 @@ int main()
 
 
 
+# Function pointer
+
+```
+void func();
+auto f = func;
+f();
+
+void (*anyname)() = func;
+anyname();
+
+typedef void(*anyname)()
+anyname a = func;
+a();
+
+
+int func(int);
+typedef int(*anyname)(int)
+
+//有用的写法
+void print()
+void func(int a, void(*f)())
+{
+	f()
+}
+func(1,print);
+func(1,[](int val){cout<<val;})//匿名函数lambda 即用即丢
+```
+
+
+
+cppreference.com
+
+很多指令都可以在任意地方写
+
+# namespace
+
+少用using namespace std
+
+namespace可以嵌套
+
+避免二义性
+
+
+
+# thread
+
+
+
+```cpp
+#include<thread>
+static bool finished=false;
+void work()
+{
+    while(!finished)
+    {
+        do something
+        std::this_thread::sleep_for(1s);
+	}
+}
+
+
+int main()
+{
+    std::thread w(work);
+    std::cin.get();
+    finished = 1;
+    
+    w.join();//等待结束。这个线程结束后，后面的代码才继续运行
+    ...
+}
+
+```
+
+
+
+# time
+
+```cpp
+#include<chrono>
+int main()
+{
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    
+    std::chrono::duration<float>dur = end-start;
+    
+}
+```
+
+std::endl;//慢
+
+```
+可以用一个Timer类，使用构造和析构函数
+然后作用在一个函数内，就可以自动计算。
+```
+
+
+
+# 多维数组
+
+```cpp
+//两个一样
+int *arr = new int [100];
+int **a = new int*[100];
+
+
+for (int i =0;i<100;i++)
+{	
+    arr[i] = new int[50];
+}
+
+int *** a3d = new int**[50];
+for(i)
+{
+    a3d[i] = new int*[50];
+    for(j)
+    {
+        a3d[i][j] = new int[50];
+    }
+}
+```
+
+
+
+# 类型转换
+
+```
+隐式转换
+int a = 1;
+double b = a;//会出现某些问题
+
+//显式
+double b = (double)a;
+double b = *(double*)&a;//因为类型大小的问题，会出现b的内存后面一部分没有被初始化，所以值会奇怪。但是前4字节是对的
+
+//
+static_cast<tar_type>(src_val)
+//
+reinterpret_cast<>()
+//
+const_cast<>()
+//
+dynamic_cast<>()
+```
+
+还有对指针值的加减
+
+
+
+# union
+
+```cpp
+union
+{
+    float a;
+    int b;
+}
+```
+
+
+
+共用体，也叫联合体，在一个“联合”内可以定义多种不同的数据类型， 一个被说明为该“联合”类型的变量中，允许装入该“联合”所定义的任何一种数据，这些数据共享同一段内存，以达到节省空间的目的。**union变量所占用的内存长度等于最长的成员的内存长度。**
+
+
+
+因为共用体将一个char类型的mark、一个long类型的num变量和一个float类型的score变量存放在**同一个地址开始的内存单元**中，而char类型和long类型所占的内存字节数是不一样的，但是在union中都是从同一个地址存放的，也就是使用的覆盖技术，这三个变量互相覆盖，而这种使几个不同的变量共占同一段内存的结构，称为“共用体”类型的结构。其union类型的结构如下：
+**因union中的所有成员起始地址都是一样的，所以&a.mark、&a.num和&a.score的值都是一样的。**
 
 
 
 
 
+# 虚析构和多态
+
+先熟悉构造和析构在继承中的调用
+
+然后熟悉virtual
+
+然后就可以懂了
+
+
+
+
+
+# 条件与操作断点
+
+在某个断点下action
+
+这样就可以在运行状态下debug
+
+![image-20221218200028240](img/image-20221218200028240.png)
+
+
+
+# 预编译头文件
+
+```
+大量include 编译耗时 可以用预编译
+```
+
+```shell
+time g++ main.cpp 可以查看编译时间
+```
+
+
+
+# 性能测试
+
+```
+
+写一个Timer类正如在time中讲的
+
+注意release下会优化代码。
+_debugbreak();//代码中加断点
+```
+
+
+
+
+
+# 结构化绑定
+
+
+
+```
+tuple<int,string> func()
+{
+	return {intVal , stringVal};
+}
+
+auto[i,s] = func();
+```
+
+
+
+
+
+
+
+
+
+# git command
 
 ```
 echo "# deep_of_c-" >> README.md
