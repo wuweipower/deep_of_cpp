@@ -1,4 +1,4 @@
-### **GNU的GCC/G++**
+# **GNU的GCC/G++**
 
 首先我们可以将GCC/G++看成一个整体，不存在GCC专门编译C语言，G++专门编译C++语言这种分别，因为编程语言发展至今是非常复杂的，编译器同样也是。我们将两者都看成GCC，GCC支持C、C++和Fortran语言。
 
@@ -8,7 +8,7 @@
 
 
 
-## **Windows的Mingw/MSVC**
+# **Windows的Mingw/MSVC**
 
 MinGW(Minimalist GNUfor Windows)，它是一个可自由使用和自由发布的Windows特定头文件和使用GNU工具集导入库的集合，允许你在Windows平台生成本地的Windows程序而不需要第三方C运行时(C Runtime)库。
 
@@ -18,7 +18,7 @@ MinGW(Minimalist GNUfor Windows)，它是一个可自由使用和自由发布的
 
 所以可以看到啦，MinGW和MSVC都是Windows C/C++语言编译支持，配置环境时遇到两者择其一即可。
 
-## **LLVM的clang/clang++**
+# **LLVM的clang/clang++**
 
 有了前文，对LLVM与clang不用解释应该也知道了。
 
@@ -28,7 +28,7 @@ LLVM计划启动于2000年，最初由美国UIUC大学的Chris Lattner博士主�
 
 目前LLVM已经被苹果IOS开发工具、Xilinx Vivado、Facebook、Google等各大公司采用。
 
-## **Make/CMake**
+# **Make/CMake**
 
 但make依然有很多不足，比如
 
@@ -42,12 +42,110 @@ LLVM计划启动于2000年，最初由美国UIUC大学的Chris Lattner博士主�
 
 
 
+# Make
+
+make就是一个命令管理工具
+
+比如我写一个批处理文件 windows环境下是bat
+
+a.bat
+
+里面就是一些可以在cmd敲的命令
+
+```bash
+echo hello
+pip install numpy
+```
+
+在cmd窗口就可以执行
+
+
+
 ```makefile
 Cxx = g++ #就是简单的变量及赋值
 FLAGS = -Wall
 
 .PHONY: clean
 clean:
-	rm *
+	rm *.o
 ```
+
+```
+make -f 文件名 如果你的文件不是Makefile
+```
+
+version 1
+
+```makefile
+hello: a.cpp b.cpp#依赖
+	g++ -o hello a.cpp b.cpp #注意用tab
+```
+
+version 2
+
+```makefile
+CXX = g++
+TAR = hello
+OBJ = a.o b.o
+$(TAR): $(OBJ)
+	$(CXX) -o $(TAR) $(OBJ)
+
+a.o: a.cpp
+	$(CXX) -c a.cpp
+b.o: b.cpp
+	$(CXX) -c b.cpp
+```
+
+
+
+version 3
+
+```makefile
+CXX = g++
+TAR = hello
+OBJ = a.o b.o
+Flags = -c -Wall
+$(TAR): $(OBJ)
+	$(CXX) -o $@ $^
+
+%.o: %.cpp
+	$(CXX) $(Flags) $< -o $@
+	
+.PHONY: clean #防止当前目录下有一个clean文件
+clean:
+	rm *.o
+```
+
+
+
+version 4
+
+```makefile
+CXX = g++
+TAR = hello
+SRC = $(wildcard *.cpp)
+OBJ = $(patsubst %.cpp, %.o, $(SRC))#路径替换
+FLAGS = -c -Wall
+
+$(TAR): $(OBJ)
+	$(CXX) -o $@ $^
+
+%.o: %.cpp
+	$(CXX) $(Flags) $< -o $@
+	
+.PHONY: clean #防止当前目录下有一个clean文件 伪目标
+clean:
+	rm *.o
+```
+
+grammar
+
+```
+$@ 表示规则中的目标
+$< 表示规则中第一个依赖条件
+$^ 表示规则中所有的依赖条件
+
+```
+
+# CMake
 
