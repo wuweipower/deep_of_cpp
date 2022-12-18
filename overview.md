@@ -960,6 +960,50 @@ auto[i,s] = func();
 
 
 
+# optional
+
+```cpp
+#include<iostream>
+#include<fstream>
+#include<string>
+using std::string;
+using std::cout;
+#include<optional>
+
+std::optional<string> read(const string& filepath)
+{
+    std::ifstream stream(filepath);
+    if(stream)
+    {
+        stream.close();
+        string res;
+        return res;
+    }
+    return {};
+}
+int main()
+{
+    std::optional<string> data = read("data.txt");
+    string val = data.value_or("NOT present");
+    cout<<val<<"\n";
+    if(data.has_value())
+    {
+        cout<<"read successfully \n";
+    }
+    else
+    {
+        cout<<"error\n";
+    }
+}
+
+```
+
+
+
+```shell
+g++ main.cpp -std=c++17 -o main
+```
+
 
 
 
@@ -974,5 +1018,30 @@ git commit -m "first commit"
 git branch -M main
 git remote add origin git@github.com:wuweipower/deep_of_c-.git
 git push -u origin main
+
+#从版本库中删除
+git rm
+```
+
+
+
+```shel
+# 忽略 .a 文件
+*.a
+
+# 但否定忽略 lib.a, 尽管已经在前面忽略了 .a 文件
+!lib.a
+
+# 仅在当前目录下忽略 TODO 文件， 但不包括子目录下的 subdir/TODO
+/TODO
+
+# 忽略 build/ 文件夹下的所有文件
+build/
+
+# 忽略 doc/notes.txt, 不包括 doc/server/arch.txt
+doc/*.txt
+
+# 忽略所有的 .pdf 文件 在 doc/ directory 下的
+doc/**/*.pdf
 ```
 
