@@ -1006,6 +1006,77 @@ g++ main.cpp -std=c++17 -o main
 
 
 
+# variant
+
+```cpp
+#include<iostream>
+#include<variant>
+#include<string>
+int main()
+{
+    std::variant<std::string, int> data;
+    data = "a";
+    std::cout<<std::get<std::string>(data)<<"\n";
+    auto* value = std::get_if<std::string>(&data);
+    if(value)
+    {
+        auto v= *value;
+    }
+    data = 2;
+    std::cout<<std::get<int>(data)<<"\n";
+    data.index();
+}
+```
+
+
+
+# any
+
+```
+#include<iostream>
+#include<any>
+
+//c++17
+int main()
+{
+    std::any data;
+    data = 1;
+    data = "a";
+    auto val = std::any_cast<std::string>(data);
+}
+```
+
+
+
+variant vs any
+
+variant is a type-safe union//for small type
+
+any has a void* to dynamically allocate memory which will be expensive//for big type
+
+
+
+# performance
+
+首先你可以参考HPC 我有这个仓库
+
+多线程。
+
+```
+std::async
+
+#include<future>
+for()
+{
+	auto a = std::async(std::launch::async, func,params_on_func);
+	
+}
+```
+
+
+
+
+
 
 
 # git command
