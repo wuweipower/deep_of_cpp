@@ -1077,6 +1077,104 @@ for()
 
 
 
+# single pattern
+
+单例很像namespace
+
+c++中的单例只是一种组织一堆全局变量和静态函数的方式
+
+
+
+# string optimization
+
+会不断内存申请
+
+对一个string类型的进行处理的时候，用str.c_str();换成指针来操作
+
+或者直接不用string，用char*;
+
+```
+重载new
+void * operator new(size_t size)
+{
+	cout<<size<<endl;
+	return malloc(size);
+}
+```
+
+
+
+在小字符串，c++标准库有自己的想法
+
+小字符串不会申请堆。在debug模式下会有，但是在release下没有申请堆内存。
+
+
+
+# memory tracking
+
+```cpp
+void* operator new(size_t size)
+{
+    std::cout<<"allocating "<<size<<"\n";
+    return malloc(size);
+}
+在这里打断点，然后再call stack里面跟踪就行
+```
+
+
+
+
+
+# CI(continue integration)
+
+==jenkins==
+
+
+
+# 求值顺序
+
+```
+int val = 0;
+print(++val,++val)
+print(val++,val++);
+这些undefined的行为，会根据环境和编译器而改变, that is to say, it depends
+```
+
+==wanbox==
+
+
+
+# 移动语义
+
+左右值引用
+
+```
+ClassName (Type&& val)noexpect
+{
+	直接使用= 浅拷贝
+	然后讲传进来的指针变量变为null
+	不用在memcpy
+}
+
+Class (ClassName&& val): type((ClassName&&)val)
+```
+
+
+
+std::move
+
+move操作符
+
+# GUI
+
+及时模式，每次都会重新绘制所有元素，绝大多数游戏是这类模式
+
+保留模式，当有需要改变的时候，执行的是改变的处理，绝大多数app采用这个模式
+
+imgui
+
+
+
 
 
 # git command
